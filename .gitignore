@@ -1,0 +1,82 @@
+# Qt
+*.pro.user
+*.pro.user.*
+*.qmlc
+*.jsc
+Makefile*
+*build-*
+*.autosave
+
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
+*.dylib
+
+# Qt-es
+object_script.*.Release
+object_script.*.Debug
+*_plugin_import.cpp
+/.qmake.cache
+/.qmake.stash
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+Makefile*
+*build-*
+
+# Conan
+conanbuildinfo.pri
+conanbuildinfo.cmake
+conanbuildinfo.txt
+conaninfo.txt
+conan.lock
+graph_info.json
+
+# RPM
+RPMS/
+SRPMS/
+BUILD/
+BUILDROOT/
+*.rpm
+*.tar.bz2
+*.tar.gz
+
+# Dataset processed
+dataset_prepared/
+*.csv
+*.dat
+*.model
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+debug/
+release/
+*.o
+*.obj

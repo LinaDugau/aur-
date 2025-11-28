@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=ru.auroraos.aurcad
+Exec=/usr/bin/ru.auroraos.aurcad
+Name=AurСад
+Name[ru]=AurСад
+
+[X-Application]
+Permissions=Camera;Pictures
+OrganizationName=ru.auroraos
+ApplicationName=aurcad
+ExecDBus=/usr/bin/ru.auroraos.aurcad

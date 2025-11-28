@@ -1,0 +1,7 @@
+[requires]
+opencv/4.10.0
+mlpack/4.4.0
+
+[generators]
+CMakeDeps
+CMakeToolchain

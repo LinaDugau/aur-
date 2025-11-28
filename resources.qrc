@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/aurcad.qml</file>
+        <file>qml/pages/MainPage.qml</file>
+        <file>qml/pages/AboutPage.qml</file>
+        <file>qml/pages/TrainingPage.qml</file>
+        <file>qml/cover/DefaultCoverPage.qml</file>
+        <!-- Icon files commented out - create icons directory and add aurcad.png files to fix -->
+        <!-- <file>icons/86x86/aurcad.png</file> -->
+        <!-- <file>icons/108x108/aurcad.png</file> -->
+        <!-- <file>icons/128x128/aurcad.png</file> -->
+        <!-- <file>icons/172x172/aurcad.png</file> -->
+    </qresource>
+</RCC>
