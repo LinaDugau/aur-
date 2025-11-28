@@ -5,15 +5,18 @@
 #include <QImage>
 #include <vector>
 #include "SegmentationData.h"
+#include "YOLO11Segmentation.h"
+#include "YOLACTInference.h"
 
 /**
  * @brief Класс для предобработки изображений яблок
  *
- * Использует OpenCV для обработки изображений:
+ * Обработка изображений без OpenCV:
  * - Нормализация
  * - Извлечение признаков (цвет, текстура, форма)
  * - Подготовка для ML-модели
  * - Работа с polygon сегментацией
+ * - Интеграция YOLO11-segm и YOLACT через ONNX Runtime
  */
 class ImageProcessor
 {
@@ -74,9 +77,28 @@ public:
     QVector<QRectF> detectApplesYOLO(const QString &imagePath);
 
     /**
-     * @brief Загружает YOLO модель
+     * @brief Загружает YOLO11-segm модель
      */
-    bool loadYOLOModel(const QString &modelPath);
+    bool loadYOLO11Model(const QString &modelPath);
+
+    /**
+     * @brief Загружает YOLACT модель
+     */
+    bool loadYOLACTModel(const QString &modelPath);
+
+    /**
+     * @brief Выполняет сегментацию с использованием YOLO11-segm
+     * @param imagePath Путь к изображению
+     * @return Список результатов сегментации
+     */
+    QVector<ONNXInference::SegmentationResult> segmentWithYOLO11(const QString &imagePath);
+
+    /**
+     * @brief Выполняет сегментацию с использованием YOLACT
+     * @param imagePath Путь к изображению
+     * @return Список результатов сегментации
+     */
+    QVector<ONNXInference::SegmentationResult> segmentWithYOLACT(const QString &imagePath);
 
     /**
      * @brief Устанавливает директорию с labelme аннотациями
@@ -89,6 +111,10 @@ private:
 
     QMap<QString, SegmentationData::ImageAnnotation> m_annotations;
     QString m_annotationsDir;
+
+    // Модели сегментации
+    YOLO11Segmentation* m_yolo11Segm;
+    YOLACTInference* m_yolact;
 
     // Вспомогательные методы
     QImage convertToGrayscale(const QImage &image);

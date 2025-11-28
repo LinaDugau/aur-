@@ -12,12 +12,16 @@
 // #include <opencv2/highgui.hpp>
 
 ImageProcessor::ImageProcessor()
+    : m_yolo11Segm(nullptr)
+    , m_yolact(nullptr)
 {
     qDebug() << "ImageProcessor initialized";
 }
 
 ImageProcessor::~ImageProcessor()
 {
+    delete m_yolo11Segm;
+    delete m_yolact;
 }
 
 std::vector<double> ImageProcessor::extractFeatures(const QString &imagePath, bool useSegmentation)

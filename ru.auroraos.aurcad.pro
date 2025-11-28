@@ -19,6 +19,9 @@ SOURCES += \
     src/AppleClassifier.cpp \
     src/CameraHandler.cpp \
     src/SegmentationData.cpp \
+    src/ONNXInference.cpp \
+    src/YOLO11Segmentation.cpp \
+    src/YOLACTInference.cpp \
 
 HEADERS += \
     src/AppleDetector.h \
@@ -26,6 +29,9 @@ HEADERS += \
     src/AppleClassifier.h \
     src/CameraHandler.h \
     src/SegmentationData.h \
+    src/ONNXInference.h \
+    src/YOLO11Segmentation.h \
+    src/YOLACTInference.h \
 
 DISTFILES += \
     rpm/ru.auroraos.aurcad.spec \

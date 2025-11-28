@@ -2,6 +2,7 @@
 
 #include "ImageProcessor.h"
 #include "SegmentationData.h"
+#include "ONNXInference.h"
 #include <QDebug>
 #include <QFileInfo>
 #include <QDir>
@@ -231,10 +232,44 @@ QVector<QRectF> ImageProcessor::detectApplesYOLO(const QString &imagePath)
 {
     QVector<QRectF> detections;
 
-    // TODO: Интеграция YOLO11 через OpenCV DNN или ONNX Runtime
-    // Пока возвращаем пустой список или используем polygon из labelme
+    // Пробуем использовать YOLO11-segm если модель загружена
+    if (m_yolo11Segm && m_yolo11Segm->isModelLoaded()) {
+        QVector<ONNXInference::SegmentationResult> results = 
+            m_yolo11Segm->segmentImage(imagePath);
+        
+        for (const auto &result : results) {
+            // Фильтруем только яблоки (класс 47 в COCO датасете)
+            if (result.detection.className.toLower().contains("apple") || 
+                result.detection.classId == 47) {
+                detections.append(result.detection.bbox);
+            }
+        }
+        
+        if (!detections.isEmpty()) {
+            qDebug() << "Found" << detections.size() << "apples using YOLO11-segm";
+            return detections;
+        }
+    }
 
-    // Проверяем, есть ли аннотация для этого изображения
+    // Пробуем использовать YOLACT если модель загружена
+    if (m_yolact && m_yolact->isModelLoaded()) {
+        QVector<ONNXInference::SegmentationResult> results = 
+            m_yolact->segmentImage(imagePath);
+        
+        for (const auto &result : results) {
+            if (result.detection.className.toLower().contains("apple") || 
+                result.detection.classId == 47) {
+                detections.append(result.detection.bbox);
+            }
+        }
+        
+        if (!detections.isEmpty()) {
+            qDebug() << "Found" << detections.size() << "apples using YOLACT";
+            return detections;
+        }
+    }
+
+    // Fallback: используем аннотации из labelme если есть
     QString imageName = QFileInfo(imagePath).fileName();
 
     if (m_annotations.contains(imageName)) {
@@ -252,12 +287,44 @@ QVector<QRectF> ImageProcessor::detectApplesYOLO(const QString &imagePath)
     return detections;
 }
 
-bool ImageProcessor::loadYOLOModel(const QString &modelPath)
+bool ImageProcessor::loadYOLO11Model(const QString &modelPath)
 {
-    // TODO: Загрузка YOLO11 модели
-    // Потребуется OpenCV DNN или ONNX Runtime
+    qDebug() << "Loading YOLO11-segm model:" << modelPath;
+    
+    if (!m_yolo11Segm) {
+        m_yolo11Segm = new YOLO11Segmentation();
+    }
+    
+    return m_yolo11Segm->loadModel(modelPath);
+}
 
-    qDebug() << "YOLO model loading not yet implemented:" << modelPath;
+bool ImageProcessor::loadYOLACTModel(const QString &modelPath)
+{
+    qDebug() << "Loading YOLACT model:" << modelPath;
+    
+    if (!m_yolact) {
+        m_yolact = new YOLACTInference();
+    }
+    
+    return m_yolact->loadModel(modelPath);
+}
 
-    return false;
+QVector<ONNXInference::SegmentationResult> ImageProcessor::segmentWithYOLO11(const QString &imagePath)
+{
+    if (!m_yolo11Segm || !m_yolo11Segm->isModelLoaded()) {
+        qWarning() << "YOLO11-segm model not loaded";
+        return QVector<ONNXInference::SegmentationResult>();
+    }
+    
+    return m_yolo11Segm->segmentImage(imagePath);
+}
+
+QVector<ONNXInference::SegmentationResult> ImageProcessor::segmentWithYOLACT(const QString &imagePath)
+{
+    if (!m_yolact || !m_yolact->isModelLoaded()) {
+        qWarning() << "YOLACT model not loaded";
+        return QVector<ONNXInference::SegmentationResult>();
+    }
+    
+    return m_yolact->segmentImage(imagePath);
 }
